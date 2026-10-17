@@ -40,7 +40,7 @@ fun RecognitionAppearanceScreen(onBack: () -> Unit) {
                     Text(text = "Recognition", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold))
                 }
             }
-        }
+        },
     ) { pad ->
         LazyColumn(modifier = Modifier.fillMaxSize().padding(pad).background(MaterialTheme.colorScheme.background), contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             item { SectionHeader(text = "Card") }
@@ -50,20 +50,33 @@ fun RecognitionAppearanceScreen(onBack: () -> Unit) {
                         Text("Style", style = MaterialTheme.typography.bodyMedium)
                         Spacer(Modifier.height(8.dp))
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            listOf("default","compact","full").forEach { s ->
+                            listOf("default", "compact", "full").forEach { s ->
                                 FilterChip(selected = s == cardStyle, onClick = { scope.launch { prefs.setRecognitionCardStyle(s) } }, label = { Text(s) })
                             }
                         }
                     }
                     HorizontalDivider(Modifier.padding(start = 16.dp), color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                     Column(Modifier.fillMaxWidth().padding(16.dp)) {
-                        Text("Corner radius: ${radius.toInt()} dp", style = MaterialTheme.typography.bodyMedium)
-                        Slider(value = radius, onValueChange = { scope.launch { prefs.setRecognitionCardCornerRadius(it) } }, valueRange = 8f..28f)
+                        var localRadius by remember(radius) { mutableFloatStateOf(radius) }
+                        Text("Corner radius: ${localRadius.toInt()} dp", style = MaterialTheme.typography.bodyMedium)
+                        Slider(
+                            value = localRadius,
+                            onValueChange = { localRadius = it },
+                            onValueChangeFinished = { scope.launch { prefs.setRecognitionCardCornerRadius(localRadius) } },
+                            valueRange = 8f..28f,
+                        )
                     }
                     HorizontalDivider(Modifier.padding(start = 16.dp), color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                     Column(Modifier.fillMaxWidth().padding(16.dp)) {
-                        Text("Artwork size: $artSize dp", style = MaterialTheme.typography.bodyMedium)
-                        Slider(value = artSize.toFloat(), onValueChange = { scope.launch { prefs.setRecognitionArtSize(it.toInt()) } }, valueRange = 48f..96f, steps = 5)
+                        var localArtSize by remember(artSize) { mutableFloatStateOf(artSize.toFloat()) }
+                        Text("Artwork size: ${localArtSize.toInt()} dp", style = MaterialTheme.typography.bodyMedium)
+                        Slider(
+                            value = localArtSize,
+                            onValueChange = { localArtSize = it },
+                            onValueChangeFinished = { scope.launch { prefs.setRecognitionArtSize(localArtSize.toInt()) } },
+                            valueRange = 48f..96f,
+                            steps = 5,
+                        )
                     }
                     HorizontalDivider(Modifier.padding(start = 16.dp), color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                     Column(Modifier.fillMaxWidth().padding(16.dp)) {
@@ -87,8 +100,14 @@ fun RecognitionAppearanceScreen(onBack: () -> Unit) {
             item {
                 SettingsGroup {
                     Column(Modifier.fillMaxWidth().padding(16.dp)) {
-                        Text("Button size: ${floatingSize} dp", style = MaterialTheme.typography.bodyMedium)
-                        Slider(value = floatingSize.toFloat(), onValueChange = { scope.launch { prefs.setRecognitionFloatingSize(it.toInt()) } }, valueRange = 48f..96f)
+                        var localFloatingSize by remember(floatingSize) { mutableFloatStateOf(floatingSize.toFloat()) }
+                        Text("Button size: ${localFloatingSize.toInt()} dp", style = MaterialTheme.typography.bodyMedium)
+                        Slider(
+                            value = localFloatingSize,
+                            onValueChange = { localFloatingSize = it },
+                            onValueChangeFinished = { scope.launch { prefs.setRecognitionFloatingSize(localFloatingSize.toInt()) } },
+                            valueRange = 48f..96f,
+                        )
                     }
                     HorizontalDivider(Modifier.padding(start = 16.dp), color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                     Column(Modifier.fillMaxWidth().padding(16.dp)) {

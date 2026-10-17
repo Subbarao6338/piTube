@@ -3,6 +3,7 @@ package com.omersusin.pitube.ui.screens.settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -19,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import com.omersusin.pitube.R
 import com.omersusin.pitube.data.local.LyricsAnimationStyle
 import com.omersusin.pitube.data.local.LyricsTextPosition
@@ -56,7 +56,7 @@ fun LyricsSettingsScreen(onBack: () -> Unit) {
                     Text(text = "Lyrics", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold))
                 }
             }
-        }
+        },
     ) { pad ->
         LazyColumn(modifier = Modifier.fillMaxSize().padding(pad).background(MaterialTheme.colorScheme.background), contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             item { SectionHeader(text = "Animation") }
@@ -67,7 +67,10 @@ fun LyricsSettingsScreen(onBack: () -> Unit) {
                         Row(modifier = Modifier.fillMaxWidth().clickable { scope.launch { prefs.setLyricsAnimation(s) } }.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                             RadioButton(selected = selected, onClick = null)
                             Spacer(Modifier.width(16.dp))
-                            Column(Modifier.weight(1f)) { Text(s.displayName, style = MaterialTheme.typography.bodyLarge); if (selected) Text("Selected", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary) }
+                            Column(Modifier.weight(1f)) {
+                                Text(s.displayName, style = MaterialTheme.typography.bodyLarge)
+                                if (selected) Text("Selected", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                            }
                         }
                         if (idx < LyricsAnimationStyle.values().lastIndex) HorizontalDivider(Modifier.padding(start = 56.dp), color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                     }
@@ -93,36 +96,62 @@ fun LyricsSettingsScreen(onBack: () -> Unit) {
                     SettingsSwitchItem(icon = Icons.Outlined.AutoAwesome, title = "Glowing lyrics", subtitle = "Highlight active line with glow", checked = glow, onCheckedChange = { scope.launch { prefs.setLyricsGlowEnabled(it) } })
                     HorizontalDivider(Modifier.padding(start = 16.dp), color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                     Column(Modifier.fillMaxWidth().padding(16.dp)) {
-                        Text("Standard blur: ${(blur * 10).toInt() / 10f}", style = MaterialTheme.typography.bodyMedium)
-                        Slider(value = blur, onValueChange = { scope.launch { prefs.setLyricsStandardBlur(it) } }, valueRange = 0f..1f)
+                        var localBlur by remember(blur) { mutableFloatStateOf(blur) }
+                        Text("Standard blur: ${(localBlur * 10).toInt() / 10f}", style = MaterialTheme.typography.bodyMedium)
+                        Slider(
+                            value = localBlur,
+                            onValueChange = { localBlur = it },
+                            onValueChangeFinished = { scope.launch { prefs.setLyricsStandardBlur(localBlur) } },
+                            valueRange = 0f..1f,
+                        )
                     }
                     HorizontalDivider(Modifier.padding(start = 16.dp), color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                     Column(Modifier.fillMaxWidth().padding(16.dp)) {
-                        Text("Text size: ${size.toInt()} sp", style = MaterialTheme.typography.bodyMedium)
-                        Slider(value = size, onValueChange = { scope.launch { prefs.setLyricsTextSize(it) } }, valueRange = 12f..28f)
+                        var localSize by remember(size) { mutableFloatStateOf(size) }
+                        Text("Text size: ${localSize.toInt()} sp", style = MaterialTheme.typography.bodyMedium)
+                        Slider(
+                            value = localSize,
+                            onValueChange = { localSize = it },
+                            onValueChangeFinished = { scope.launch { prefs.setLyricsTextSize(localSize) } },
+                            valueRange = 12f..28f,
+                        )
                     }
                     HorizontalDivider(Modifier.padding(start = 16.dp), color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                     Column(Modifier.fillMaxWidth().padding(16.dp)) {
-                        Text("Line spacing: ${(spacing * 10).toInt() / 10f}x", style = MaterialTheme.typography.bodyMedium)
-                        Slider(value = spacing, onValueChange = { scope.launch { prefs.setLyricsLineSpacing(it) } }, valueRange = 0.8f..2.2f)
+                        var localSpacing by remember(spacing) { mutableFloatStateOf(spacing) }
+                        Text("Line spacing: ${(localSpacing * 10).toInt() / 10f}x", style = MaterialTheme.typography.bodyMedium)
+                        Slider(
+                            value = localSpacing,
+                            onValueChange = { localSpacing = it },
+                            onValueChangeFinished = { scope.launch { prefs.setLyricsLineSpacing(localSpacing) } },
+                            valueRange = 0.8f..2.2f,
+                        )
                     }
                     HorizontalDivider(Modifier.padding(start = 16.dp), color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                     Column(Modifier.fillMaxWidth().padding(16.dp)) {
-                        Text("Instrumental note size: ${noteSize.toInt()} dp", style = MaterialTheme.typography.bodyMedium)
-                        Slider(value = noteSize, onValueChange = { scope.launch { prefs.setLyricsNoteSize(it) } }, valueRange = 28f..96f)
+                        var localNoteSize by remember(noteSize) { mutableFloatStateOf(noteSize) }
+                        Text("Instrumental note size: ${localNoteSize.toInt()} dp", style = MaterialTheme.typography.bodyMedium)
+                        Slider(
+                            value = localNoteSize,
+                            onValueChange = { localNoteSize = it },
+                            onValueChangeFinished = { scope.launch { prefs.setLyricsNoteSize(localNoteSize) } },
+                            valueRange = 28f..96f,
+                        )
                     }
                     HorizontalDivider(Modifier.padding(start = 16.dp), color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                     Column(Modifier.fillMaxWidth().padding(16.dp)) {
                         // ±50 ms steps across a ±5 s window; positive values make
                         // lyrics highlight EARLIER (shifts the effective clock forward).
                         val stepped = (syncOffset / 50) * 50
+                        var localSyncOffset by remember(stepped) { mutableFloatStateOf(stepped.toFloat()) }
                         Text(
-                            "Sync offset: ${if (stepped >= 0) "+" else ""}${stepped}ms",
+                            "Sync offset: ${if (localSyncOffset >= 0) "+" else ""}${localSyncOffset.toInt()}ms",
                             style = MaterialTheme.typography.bodyMedium,
                         )
                         Slider(
-                            value = stepped.toFloat(),
-                            onValueChange = { scope.launch { prefs.setLyricsSyncOffsetMs(((it / 50).toInt() * 50)) } },
+                            value = localSyncOffset,
+                            onValueChange = { localSyncOffset = ((it / 50).toInt() * 50).toFloat() },
+                            onValueChangeFinished = { scope.launch { prefs.setLyricsSyncOffsetMs(localSyncOffset.toInt()) } },
                             valueRange = -5000f..5000f,
                             steps = ((5000 * 2) / 50) - 1,
                         )
@@ -172,7 +201,10 @@ fun LyricsSettingsScreen(onBack: () -> Unit) {
                         },
                     ) { (id, label) ->
                         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Column(Modifier.weight(1f)) { Text(label, style = MaterialTheme.typography.bodyLarge); Text(id, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+                            Column(Modifier.weight(1f)) {
+                                Text(label, style = MaterialTheme.typography.bodyLarge)
+                                Text(id, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
                         }
                     }
                 }

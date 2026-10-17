@@ -28,6 +28,7 @@ spotless {
     val ktlintConfig =
         mapOf(
             "ij_kotlin_packages_to_use_import_on_demand" to "**",
+            "ktlint_function_naming_ignore_when_annotated_with" to "Composable",
         )
 
     kotlin {

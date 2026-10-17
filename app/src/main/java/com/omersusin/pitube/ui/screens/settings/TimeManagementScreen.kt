@@ -17,9 +17,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -97,9 +97,9 @@ fun TimeManagementScreen(
             ) {
                 Row(
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 4.dp, vertical = 8.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(onClick = onNavigateBack) {
@@ -123,12 +123,12 @@ fun TimeManagementScreen(
     ) { padding ->
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp)
-                    .navigationBarsPadding(),
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
+                .navigationBarsPadding(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Spacer(Modifier.height(4.dp))
@@ -282,24 +282,24 @@ private fun StatsHeroCard(uiState: TimeManagementState) {
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
         colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-            ),
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+        ),
     ) {
         Column(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             // Icon
             Box(
                 modifier =
-                    Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
+                Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -383,9 +383,9 @@ private fun WeeklyChartCard(data: List<DailyStat>) {
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
-            ),
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
+        ),
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             // Header
@@ -415,9 +415,9 @@ private fun WeeklyChartCard(data: List<DailyStat>) {
             if (data.isEmpty() || data.all { it.durationH == 0f }) {
                 Box(
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(160.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .height(160.dp),
                     contentAlignment = Alignment.Center,
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -448,10 +448,10 @@ private fun WeeklyChartCard(data: List<DailyStat>) {
                     // Y-axis labels
                     Column(
                         modifier =
-                            Modifier
-                                .fillMaxHeight()
-                                .width(30.dp)
-                                .padding(end = 4.dp),
+                        Modifier
+                            .fillMaxHeight()
+                            .width(30.dp)
+                            .padding(end = 4.dp),
                         verticalArrangement = Arrangement.SpaceBetween,
                         horizontalAlignment = Alignment.End,
                     ) {
@@ -490,10 +490,10 @@ private fun WeeklyChartCard(data: List<DailyStat>) {
                                     end = Offset(size.width, y),
                                     strokeWidth = 1f,
                                     pathEffect =
-                                        PathEffect.dashPathEffect(
-                                            floatArrayOf(8f, 8f),
-                                            0f,
-                                        ),
+                                    PathEffect.dashPathEffect(
+                                        floatArrayOf(8f, 8f),
+                                        0f,
+                                    ),
                                 )
                             }
                         }
@@ -511,9 +511,9 @@ private fun WeeklyChartCard(data: List<DailyStat>) {
                                     primaryColor = primaryColor,
                                     containerColor = containerColor,
                                     modifier =
-                                        Modifier
-                                            .weight(1f)
-                                            .fillMaxHeight(),
+                                    Modifier
+                                        .weight(1f)
+                                        .fillMaxHeight(),
                                 )
                             }
                         }
@@ -561,21 +561,21 @@ private fun ChartBar(
         // Bar
         Box(
             modifier =
-                Modifier
-                    .fillMaxWidth(0.6f)
-                    .fillMaxHeight(animatedFraction.coerceAtLeast(0.01f))
-                    .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp))
-                    .background(
-                        if (stat.isToday) {
-                            Brush.verticalGradient(
-                                listOf(primaryColor, primaryColor.copy(alpha = 0.7f)),
-                            )
-                        } else {
-                            Brush.verticalGradient(
-                                listOf(containerColor, containerColor.copy(alpha = 0.5f)),
-                            )
-                        },
-                    ),
+            Modifier
+                .fillMaxWidth(0.6f)
+                .fillMaxHeight(animatedFraction.coerceAtLeast(0.01f))
+                .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp))
+                .background(
+                    if (stat.isToday) {
+                        Brush.verticalGradient(
+                            listOf(primaryColor, primaryColor.copy(alpha = 0.7f)),
+                        )
+                    } else {
+                        Brush.verticalGradient(
+                            listOf(containerColor, containerColor.copy(alpha = 0.5f)),
+                        )
+                    },
+                ),
         )
 
         Spacer(Modifier.height(6.dp))
@@ -585,11 +585,11 @@ private fun ChartBar(
             stat.dayName.take(3),
             style = MaterialTheme.typography.labelSmall,
             color =
-                if (stat.isToday) {
-                    primaryColor
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                },
+            if (stat.isToday) {
+                primaryColor
+            } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            },
             fontWeight = if (stat.isToday) FontWeight.Bold else FontWeight.Normal,
             fontSize = 11.sp,
         )
@@ -606,9 +606,9 @@ private fun StatsBreakdownCard(uiState: TimeManagementState) {
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
-            ),
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
+        ),
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             StatRow(
@@ -651,10 +651,10 @@ private fun StatRow(
         ) {
             Box(
                 modifier =
-                    Modifier
-                        .size(32.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(tint.copy(alpha = 0.1f)),
+                Modifier
+                    .size(32.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(tint.copy(alpha = 0.1f)),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(icon, null, tint = tint, modifier = Modifier.size(18.dp))
@@ -687,11 +687,11 @@ private fun ToolsSectionHeader() {
     ) {
         Box(
             modifier =
-                Modifier
-                    .width(3.dp)
-                    .height(20.dp)
-                    .clip(RoundedCornerShape(2.dp))
-                    .background(MaterialTheme.colorScheme.primary),
+            Modifier
+                .width(3.dp)
+                .height(20.dp)
+                .clip(RoundedCornerShape(2.dp))
+                .background(MaterialTheme.colorScheme.primary),
         )
         Column {
             Text(
@@ -727,9 +727,9 @@ private fun ReminderCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
-            ),
+        CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp),
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = if (enabled) 2.dp else 0.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -740,10 +740,10 @@ private fun ReminderCard(
                 // Icon
                 Box(
                     modifier =
-                        Modifier
-                            .size(44.dp)
-                            .clip(RoundedCornerShape(14.dp))
-                            .background(containerColor.copy(alpha = if (enabled) 1f else 0.5f)),
+                    Modifier
+                        .size(44.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(containerColor.copy(alpha = if (enabled) 1f else 0.5f)),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
@@ -780,8 +780,8 @@ private fun ReminderCard(
 
             AnimatedVisibility(
                 visible = enabled,
-                enter = expandVertically(animationSpec = spring(dampingRatio = 0.8f)) + fadeIn(),
-                exit = shrinkVertically() + fadeOut(),
+                enter = expandVertically(animationSpec = spring(dampingRatio = Spring.DampingRatioNoBouncy)) + fadeIn(),
+                exit = shrinkVertically(animationSpec = spring(dampingRatio = Spring.DampingRatioNoBouncy)) + fadeOut(),
             ) {
                 Column(
                     modifier = Modifier.padding(top = 16.dp, start = 4.dp, end = 4.dp),
@@ -810,11 +810,11 @@ private fun TimeSlotRow(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
-                .clickable(onClick = onClick)
-                .padding(vertical = 10.dp, horizontal = 4.dp),
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick)
+            .padding(vertical = 10.dp, horizontal = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -872,9 +872,9 @@ private fun BedtimeScheduleIndicator(
     ) {
         Row(
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
+            Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -914,11 +914,11 @@ private fun FrequencySelector(
 ) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
-                .clickable(onClick = onClick)
-                .padding(vertical = 8.dp, horizontal = 4.dp),
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick)
+            .padding(vertical = 8.dp, horizontal = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -1040,11 +1040,11 @@ private fun FrequencyPickerDialog(
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
                         color =
-                            if (isSelected) {
-                                MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-                            } else {
-                                Color.Transparent
-                            },
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                        } else {
+                            Color.Transparent
+                        },
                         shape = RoundedCornerShape(12.dp),
                         onClick = { onConfirm(minutes) },
                     ) {
