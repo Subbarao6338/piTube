@@ -45,6 +45,8 @@ fun NotificationScreen(
     viewModel: NotificationViewModel = hiltViewModel(),
 ) {
     val notifications by viewModel.notifications.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
+    val refreshFailed by viewModel.refreshFailed.collectAsState()
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -73,9 +75,9 @@ fun NotificationScreen(
     // Removed Scaffold completely. Using pure Column for absolute control.
     Column(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+        Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
     ) {
         TopAppBar(
             title = {
@@ -114,14 +116,43 @@ fun NotificationScreen(
             // Explicitly set insets to 0 so it doesn't add status bar padding
             windowInsets = WindowInsets(0.dp),
             colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                ),
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                titleContentColor = MaterialTheme.colorScheme.onBackground,
+            ),
         )
 
         if (notifications.isEmpty()) {
-            EmptyNotificationsState(modifier = Modifier.weight(1f))
+            if (isRefreshing) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else if (refreshFailed) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(32.dp),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.error_network),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Button(onClick = { viewModel.refreshNotifications() }) {
+                            Text(stringResource(R.string.retry))
+                        }
+                    }
+                }
+            } else {
+                EmptyNotificationsState(modifier = Modifier.weight(1f))
+            }
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -152,10 +183,10 @@ fun NotificationScreen(
 private fun NotificationHeader(title: String) {
     Box(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.95f)) // Slight transparency for sticky effect
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+        Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.95f)) // Slight transparency for sticky effect
+            .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         Text(
             text = title,
@@ -193,10 +224,10 @@ private fun SwipeToDismissNotification(
                 }
             Box(
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(color) // Edge-to-edge flat red color to match the item
-                        .padding(end = 24.dp),
+                Modifier
+                    .fillMaxSize()
+                    .background(color) // Edge-to-edge flat red color to match the item
+                    .padding(end = 24.dp),
                 contentAlignment = Alignment.CenterEnd,
             ) {
                 Icon(
@@ -228,28 +259,28 @@ private fun NotificationItem(
     // Instead of Card, we use a raw Row. It is perfectly optimized for LazyColumn.
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                // Subtle background tint for unread items
-                .background(
-                    if (isUnread) {
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.05f)
-                    } else {
-                        MaterialTheme.colorScheme.background
-                    },
-                ).clickable(onClick = onClick)
-                .padding(start = 16.dp, end = 8.dp, top = 12.dp, bottom = 12.dp),
+        Modifier
+            .fillMaxWidth()
+            // Subtle background tint for unread items
+            .background(
+                if (isUnread) {
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.05f)
+                } else {
+                    MaterialTheme.colorScheme.background
+                },
+            ).clickable(onClick = onClick)
+            .padding(start = 16.dp, end = 8.dp, top = 12.dp, bottom = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.Top,
     ) {
         // Thumbnail Section (Clean 16:9 ratio)
         Box(
             modifier =
-                Modifier
-                    .width(130.dp)
-                    .aspectRatio(16f / 9f)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
+            Modifier
+                .width(130.dp)
+                .aspectRatio(16f / 9f)
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant),
         ) {
             AsyncImage(
                 model = notification.thumbnailUrl,
@@ -271,10 +302,10 @@ private fun NotificationItem(
                 Text(
                     text = notification.title,
                     style =
-                        MaterialTheme.typography.bodyMedium.copy(
-                            lineHeight = 18.sp,
-                            fontWeight = if (isUnread) FontWeight.Bold else FontWeight.Normal,
-                        ),
+                    MaterialTheme.typography.bodyMedium.copy(
+                        lineHeight = 18.sp,
+                        fontWeight = if (isUnread) FontWeight.Bold else FontWeight.Normal,
+                    ),
                     color = MaterialTheme.colorScheme.onBackground,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
@@ -285,9 +316,9 @@ private fun NotificationItem(
                 IconButton(
                     onClick = onDismiss,
                     modifier =
-                        Modifier
-                            .size(24.dp)
-                            .offset(x = 4.dp, y = (-4).dp),
+                    Modifier
+                        .size(24.dp)
+                        .offset(x = 4.dp, y = (-4).dp),
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Close,
@@ -317,10 +348,10 @@ private fun NotificationItem(
                     Spacer(modifier = Modifier.width(8.dp))
                     Box(
                         modifier =
-                            Modifier
-                                .size(6.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.primary),
+                        Modifier
+                            .size(6.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary),
                     )
                 }
             }
