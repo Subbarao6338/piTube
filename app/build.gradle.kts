@@ -22,6 +22,9 @@ android {
 
         versionName = "1.0.0"
         testInstrumentationRunner = "com.omersusin.pitube.HiltTestRunner"
+        androidResources {
+            localeFilters += listOf("en")
+        }
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -46,8 +49,7 @@ android {
                 file.inputStream().use { load(it) }
             }
         }
-        fun String.buildConfigLiteral(): String =
-            "\"${replace("\\", "\\\\").replace("\"", "\\\"")}\""
+        fun String.buildConfigLiteral(): String = "\"${replace("\\", "\\\\").replace("\"", "\\\"")}\""
         buildConfigField("String", "AUDD_TOKEN", localProps.getProperty("AUDD_TOKEN", "").buildConfigLiteral())
         buildConfigField("String", "ACR_CLOUD_HOST", localProps.getProperty("ACR_CLOUD_HOST", "").buildConfigLiteral())
         buildConfigField("String", "ACR_CLOUD_ACCESS_KEY", localProps.getProperty("ACR_CLOUD_ACCESS_KEY", "").buildConfigLiteral())
@@ -65,7 +67,7 @@ android {
         abi {
             isEnable = true
             reset()
-            include("arm64-v8a", "armeabi-v7a")
+            include("arm64-v8a")
             // Universal APK duplicates the full dex+package work (~1-2 min in CI).
             // Routine builds emit ABI splits only; pass -PuniversalApk for a
             // universal artifact (CI does this on manual dispatch / tag builds).
